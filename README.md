@@ -1,5 +1,11 @@
 # bigip-onbording
-Ansible role to automate onboarding configuration on a BIG-IP
+Ansible role to automate onboarding configuration on a BIG-IP. The role will configure the following
+* BIG-IP hostname
+* BIG-IP SSH Banner text
+* NTP servers
+* DNS servers
+* Provision the modules (ASM/AFM etc) on the BIG-IP
+* Configure VLAN's and Self-IPs
 
 ## Requirements
 * This role requires Ansible 2.4

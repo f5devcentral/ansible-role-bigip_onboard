@@ -67,3 +67,6 @@ module_provisioning:                                 //Module provisioning on BI
 Because this role includes usage of credentials to access your BIG-IP, I recommend that you supply these variables in an ansible-vault encrypted file.
 
 This can be supplied out-of-band of this role
+
+## Credits
+https://github.com/F5Networks/f5-ansible

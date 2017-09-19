@@ -1,4 +1,5 @@
 ---
 - hosts: bigips
+  gather_facts: false
   roles:
-    - bigip-onboarding
+  - { role: f5devcentral.bigip-onboarding }

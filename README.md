@@ -10,6 +10,10 @@ Ansible role to automate onboarding configuration on a BIG-IP. The role will con
 ## Requirements
 * This role requires Ansible 2.4
 * BIG-IP is licensed
+* Packages to be installed
+  - pip install f5-sdk
+  - pip install bigsuds
+  - pip install netaddr
 
 ## Role Variables
 The variables that can be passed to this role and a brief description about them are as follows.

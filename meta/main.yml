@@ -4,7 +4,7 @@ galaxy_info:
   license: license (GPLv2, CC-BY, etc)
   min_ansible_version: 2.4
   galaxy_tags:
-    - big-ip
+    - bigip
     - networking
     - selfip
     - bigip

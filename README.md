@@ -67,9 +67,11 @@ module_provisioning:                                 //Module provisioning on BI
 
 ## Example Playbook
 ```
- - hosts: bigips
-   roles:
-    - { role: bigip-onboarding }
+- hosts: bigips
+  gather_facts: false
+  roles:
+  - { role: f5devcentral.bigip-onboarding }
+
 ```
 
 ## Credential storage

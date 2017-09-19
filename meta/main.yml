@@ -3,6 +3,12 @@ galaxy_info:
   company: F5 Networks
   license: license (GPLv2, CC-BY, etc)
   min_ansible_version: 2.4
+  platforms:
+    - name: Ubuntu
+      versions:
+      - all
+  categories:
+      - networking:f5:bigip
   galaxy_tags:
     - bigip
     - networking

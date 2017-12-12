@@ -1,4 +1,4 @@
-# bigip-onbording
+# bigip-onboarding
 Ansible role to automate onboarding configuration on a BIG-IP. The role will configure the following
 * BIG-IP hostname
 * BIG-IP SSH Banner text

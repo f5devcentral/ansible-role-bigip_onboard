@@ -15,6 +15,4 @@ galaxy_info:
     - f5
     - networking
     - bigip
-    - backup
-    - qkview
-    - ucs
+    - onboard

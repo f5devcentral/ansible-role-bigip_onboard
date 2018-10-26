@@ -1,17 +1,20 @@
+---
+
+dependencies: []
+
 galaxy_info:
-  author: Payal Singh
+  role_name: bigip_onboard
+  author:
+    - payalsin
+    - caphrim007
+  description: Performs a basic series of on-boarding steps to bootstrap a BIG-IP system to the point that it can accept configuration.
   company: F5 Networks
-  license: license (GPLv2, CC-BY, etc)
-  min_ansible_version: 2.4
-  platforms:
-    - name: Ubuntu
-      versions:
-      - all
-  categories:
-      - networking:f5:bigip
+  license: Apache
+  min_ansible_version: 2.7
   galaxy_tags:
-    - bigip
+    - f5
     - networking
-    - selfip
     - bigip
-    - F5
+    - backup
+    - qkview
+    - ucs

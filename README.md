@@ -8,8 +8,7 @@ Ansible role to automate onboarding configuration on a BIG-IP. The role will con
 * Configure VLAN's and Self-IPs
 
 ## Requirements
-* This role requires Ansible 2.4
-* BIG-IP is licensed
+* This role requires Ansible 2.6
 * Packages to be installed
   - pip install f5-sdk
   - pip install bigsuds
@@ -38,14 +37,16 @@ dns_search_domains:                                 //DNS serach domains configu
  - 'local'
  - 'localhost'
 
+device_license: 'AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE'   //BIG-IP license key. Only declare this variable if you desire the licensing task to run.
+
 ip_version: 4                                       //DNS protocol version
 
 vlan_information:                                   //VLAN configured on BIG-IP
  - name: 'External'                                 //Example: VLAN 'External' with VLAN tag 10
-   tag: '10'                                                   tag 10 tagged to interface 1.1
+   tag: '10'                                                   tag 10 tagged to interface 1.1. Omitting the 'tag' parameter will create an untagged VLAN
    interface: '1.1'                                 
  - name: 'Internal'                                 //Example: VLAN 'Internal' with VLAN tag 11 
-   tag: '11'                                                   tagged to interface 1.2
+   tag: '11'                                                   tagged to interface 1.2. Omitting the 'tag' parameter will create an untagged VLAN
    interface: '1.2'
 
 selfip_information:                                 //Self-IP configured on the BIG-IP
@@ -91,6 +92,9 @@ To validate the SSL certificates of the BIG-IP REST API
 - set validate_certs: true
 - Generate a public private key pair
 - Store the public key on BIG-IP (https://support.f5.com/csp/article/K13454#bigipsshdaccept)
+
+## Licensing
+When licensing a BIG-IP, this role will accept the EULA on your behalf. This module will not present you with the EULA, so it is incumbent on you to read it here: https://support.f5.com/csp/article/K12902
 
 ## Credits
 https://github.com/F5Networks/f5-ansible

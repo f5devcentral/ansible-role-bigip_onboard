@@ -1,45 +1,72 @@
 ---
-username: admin
-password: admin
 
-banner_text: "--------Welcome to Onboarding BIGIP----------"
+### Licensing configuration
+#
+# This parameter, when defined and specified, is used to license
+# the remote device.
+#
+# Note that the BIG-IP device does *not* need to have access to
+# the internet to enable the licensing of it. Instead, the Ansible
+# module itself is responsible for fetching the license.
+#
+# This allows you to license BIG-IP devices that are configured in
+# a "lights-out" sort of environment. The requirement for internet
+# access is placed on the Ansible controller host.
+#
+# bigip_onboard_license: ''
 
-hostname: 'ansibleManaged-bigip.local'
+### SSHD banner configuration
+#
+# The SSH
+#
+# bigip_onboard_banner_text: ''
 
-ntp_servers:
- - '172.27.1.1'
- - '172.27.1.2'
+#
+# bigip_onboard_hostname: ''
 
-dns_servers:
- - '8.8.8.8'
- - '4.4.4.4'
+## NTP configuration
+bigip_onboard_ntp_servers:
+  - pool.ntp.org
+  - time.ubuntu.com
 
-dns_search_domains:
- - 'local'
- - 'localhost'
+## DNS configuration
+bigip_onboard_dns_servers:
+  - 8.8.8.8
+  - 8.8.4.4
+bigip_onboard_dns_ip_version: 4
+bigip_onboard_dns_search_domains:
+  - local
+  - localhost
 
-ip_version: 4
+## VLANs configuration
+#
+bigip_onboard_vlan_information:
+  - name: External
+    interface: 1.1
+  - name: Internal
+    interface: 1.2
+  - name: HA
+    interface: 1.3
 
-vlan_information:
- - name: 'External'
-   tag: '10'
-   interface: '1.1'
- - name: 'Internal'
-   tag: '11'
-   interface: '1.2'
+## Self-IP configuration
+#
+bigip_onboard_selfip_information:
+  - name: External-SelfIP
+    address: 10.168.68.5
+    netmask: 255.255.255.0
+    vlan: External
+    allow_service: default
+  - name: Internal-SelfIP
+    address: 192.168.68.5
+    netmask: 255.255.255.0
+    vlan: Internal
+    allow_service: default
+  - name: HA-SelfIP
+    address: 192.168.68.5
+    netmask: 255.255.255.0
+    vlan: Internal
+    allow_service: default
 
-selfip_information:
- - name: 'External-SelfIP'
-   address: '10.168.68.5'
-   netmask: '255.255.255.0'
-   vlan: 'External'
-   allow_service: 'default'
- - name: 'Internal-SelfIP'
-   address: '192.168.68.5'
-   netmask: '255.255.255.0'
-   vlan: 'Internal'
-   allow_service: 'default'
-
-module_provisioning:
- - name: 'asm'
-   level: 'nominal'
+## Module configuration
+#
+# bigip_onboard_module_provisioning: ''

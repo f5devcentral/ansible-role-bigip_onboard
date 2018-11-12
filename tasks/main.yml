@@ -1,97 +1,85 @@
 ---
+
+- name: Setup provider
+  set_fact:
+    provider:
+      server: "{{ provider_server }}"
+      server_port: "{{ provider_server_port }}"
+      user: "{{ provider_user }}"
+      password: "{{ provider_password }}"
+      validate_certs: "{{ provider_validate_certs }}"
+      transport: "{{ provider_transport }}"
+
+- name: Wait for BIG-IP to be available
+  bigip_wait:
+    timeout: 300
+    provider: "{{ provider }}"
+  delegate_to: localhost
+  register: status
+  until: status is success
+  retries: 10
+  delay: 6
+
+- name: License the device
+  bigip_device_license:
+    license_key: "{{ bigip_onboard_license }}"
+    provider: "{{ provider }}"
+  delegate_to: localhost
+  when: bigip_onboard_license is defined and bigip_onboard_license != ''
+
 - name: Configure NTP server on BIG-IP
   bigip_device_ntp:
-     server: "{{ inventory_hostname }}"
-     user: "{{ username }}"
-     password: "{{ password }}"
-     ntp_servers: "{{ ntp_servers }}"
-     validate_certs: False
+    provider: "{{ provider }}"
+    ntp_servers: "{{ bigip_onboard_ntp_servers }}"
   delegate_to: localhost
 
 - name: Configure BIG-IP hostname
   bigip_hostname:
-     server: "{{ inventory_hostname }}"
-     user: "{{ username }}"
-     password: "{{ password }}"
-     validate_certs: False
-     hostname: "{{ hostname }}"
+    provider: "{{ provider }}"
+    hostname: "{{ bigip_onboard_hostname }}"
   delegate_to: localhost
+  when: bigip_onboard_hostname != ""
 
 - name: Manage SSHD setting on BIG-IP
   bigip_device_sshd:
-     server: "{{ inventory_hostname }}"
-     user: "{{ username }}"
-     password: "{{ password }}"
-     banner: "enabled"
-     banner_text: " {{ banner_text }}"
-     validate_certs: False
+    provider: "{{ provider }}"
+    banner: enabled
+    banner_text: " {{ bigip_onboard_banner_text|default(omit) }}"
   delegate_to: localhost
 
 - name: Manage BIG-IP DNS settings
   bigip_device_dns:
-    server: "{{ inventory_hostname }}"
-    user: "{{ username }}"
-    password: "{{ password }}"
-    name_servers: "{{ dns_servers }}"
-    search: "{{ dns_search_domains }}"
-    ip_version: "{{ ip_version }}"
-    validate_certs: False
-  delegate_to: localhost
-
-- name: Configure VLANs on the BIG-IP
-  bigip_vlan:
-    server: "{{ inventory_hostname }}"
-    user: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: False
-    name: "{{ item.name }}"
-    tag: "{{ item.tag | default(omit)}}"
-    tagged_interface: "{{ item.interface if item.tag is defined else omit }}"
-    untagged_interface: "{{ item.interface if item.tag is undefined else omit }}"
-  with_items: "{{ vlan_information }}"
-  delegate_to: localhost
-
-- name: Configure SELF-IPs on the BIG-IP
-  bigip_selfip:
-    server: "{{ inventory_hostname }}"
-    user: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: False
-    name: "{{ item.name }}"
-    address: "{{ item.address }}"
-    netmask: "{{ item.netmask }}"
-    vlan: "{{ item.vlan }}"
-    allow_service: "{{item.allow_service | default(omit)}}"
-  with_items: "{{ selfip_information }}"
-  delegate_to: localhost
-
-- name: License BIG-IP using a key
-  when: device_license is defined
-  bigip_device_license:
-    server: "{{ inventory_hostname }}"
-    user: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: False
-    license_key: "{{ device_license }}"
-    accept_eula: yes
+    provider: "{{ provider }}"
+    name_servers: "{{ bigip_onboard_dns_servers|default(omit) }}"
+    search: "{{ bigip_onboard_dns_search_domains|default(omit) }}"
+    ip_version: "{{ bigip_onboard_dns_ip_version|default(omit) }}"
   delegate_to: localhost
 
 - name: Provision BIG-IP with appropriate modules
   bigip_provision:
-     server: "{{ inventory_hostname }}"
-     user: "{{ username }}"
-     password: "{{ password }}"
-     validate_certs: False
-     module: "{{ item.name }}"
-     level: "{{ item.level }}"
-  with_items: "{{ module_provisioning }}"
+    provider: "{{ provider }}"
+    module: "{{ item.name }}"
+    level: "{{ item.level|default(omit) }}"
+  loop: "{{ bigip_onboard_module_provisioning }}"
+  when: bigip_onboard_module_provisioning != ""
   delegate_to: localhost
-  
-- name: Disable the setup utility
-  bigip_sys_global:
-    server: "{{ inventory_hostname }}"
-    user: "{{ username }}"
-    password: "{{ password }}"
-    validate_certs: False
-    gui_setup: no
+
+- name: Configure VLANs on the BIG-IP
+  bigip_vlan:
+    provider: "{{ provider }}"
+    name: "{{ item.name }}"
+    tag: "{{ item.tag|default(omit) }}"
+    tagged_interface: "{{ item.interface|default(omit) }}"
+  loop: "{{ bigip_onboard_vlan_information }}"
+  delegate_to: localhost
+
+- name: Configure SELF-IPs on the BIG-IP
+  bigip_selfip:
+    provider: "{{ provider }}"
+    name: "{{ item.name }}"
+    address: "{{ item.address }}"
+    netmask: "{{ item.netmask }}"
+    vlan: "{{ item.vlan }}"
+    allow_service: "{{ item.allow_service|default(omit) }}"
+  loop: "{{ bigip_onboard_selfip_information }}"
   delegate_to: localhost

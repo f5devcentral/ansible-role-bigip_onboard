@@ -1,0 +1,14 @@
+---
+
+- name: Converge - present
+  hosts: all
+
+  roles:
+    - ansible-role-bigip_gslb
+
+- name: Converge - absent
+  hosts: all
+
+  roles:
+    - role: ansible-role-bigip_gslb
+      bigip_glsb_state: absent

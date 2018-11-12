@@ -83,3 +83,9 @@
     allow_service: "{{ item.allow_service|default(omit) }}"
   loop: "{{ bigip_onboard_selfip_information }}"
   delegate_to: localhost
+
+- name: Disable the setup utility
+  bigip_sys_global:
+    provider: "{{ provider }}"
+    gui_setup: no
+  delegate_to: localhost

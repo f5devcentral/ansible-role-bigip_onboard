@@ -38,7 +38,7 @@
     provider: "{{ provider }}"
     hostname: "{{ bigip_onboard_hostname }}"
   delegate_to: localhost
-  when: bigip_onboard_hostname != ""
+  when: bigip_onboard_hostname is defined and bigip_onboard_hostname != ""
 
 - name: Manage SSHD setting on BIG-IP
   bigip_device_sshd:
@@ -61,7 +61,7 @@
     module: "{{ item.name }}"
     level: "{{ item.level|default(omit) }}"
   loop: "{{ bigip_onboard_module_provisioning }}"
-  when: bigip_onboard_module_provisioning != ""
+  when: bigip_onboard_module_provisioning is defined and bigip_onboard_module_provisioning != ""
   delegate_to: localhost
 
 - name: Configure VLANs on the BIG-IP
